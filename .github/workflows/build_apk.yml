@@ -1,0 +1,42 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # Кнопка ручного запуска
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0' # Можешь поменять на свою версию
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Create Keystore for Signing
+        run: |
+          mkdir -p android/app
+          keytool -genkey -v -keystore android/app/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass android -keypass android -dname "CN=Test, OU=Test, O=Test, L=Test, S=Test, C=US"
+          
+          echo "storeFile=upload-keystore.jks" >> android/gradle.properties
+          echo "storePassword=android" >> android/gradle.properties
+          echo "keyAlias=upload" >> android/gradle.properties
+          echo "keyPassword=android" >> android/gradle.properties
+
+      - name: Build Release APK
+        run: flutter build apk --release
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: messenger-app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
