@@ -14,6 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5  # Обновлено до v5
         with:
+          ref: ${{ github.ref }} # <--- ЭТА СТРОКА ФИКСИТ ПРОБЛЕМУ ВЕТКИ
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
           fetch-depth: 0
