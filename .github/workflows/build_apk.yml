@@ -3,33 +3,41 @@ name: Build Android APK
 on:
   push:
     branches: [ "main", "master" ]
-  workflow_dispatch: # Позволяет запустить вручную
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Использует последний образ Ubuntu (24.04)
 
     steps:
-      # 1. Скачиваем код (Используем последнюю стабильную версию и явный токен)
+      # 1. Скачиваем код (Обновлено до v5)
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0 # Скачиваем всю историю, чтобы не было проблем с версиями
+          fetch-depth: 0
+          persist-credentials: true
 
-      # 2. Устанавливаем Flutter
+      # 2. Устанавливаем Flutter (Используем конкретную стабильную версию)
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0' # Убедись, что эта версия есть в списке доступных или используй 'stable'
+          flutter-version: '3.24.0'
           channel: 'stable'
+          cache: true
 
       # 3. Получаем зависимости
       - name: Install dependencies
         run: flutter pub get
 
-      # 4. Создаем ключ подписи (Keystore)
-      - name: Create Keystore for Signing
+      # 4. Настройка Java и Gradle (Явно указываем версию Java, чтобы избежать конфликтов)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 5. Создаем ключ подписи
+      - name: Create Keystore
         run: |
           mkdir -p android/app
           keytool -genkey -v -keystore android/app/upload-keystore.jks \
@@ -38,20 +46,20 @@ jobs:
             -storepass android -keypass android \
             -dname "CN=Test, OU=Test, O=Test, L=Test, S=Test, C=US"
           
-          # Записываем настройки в gradle.properties
           echo "storeFile=upload-keystore.jks" >> android/gradle.properties
           echo "storePassword=android" >> android/gradle.properties
           echo "keyAlias=upload" >> android/gradle.properties
           echo "keyPassword=android" >> android/gradle.properties
 
-      # 5. Сборка Release APK
+      # 6. Сборка APK
       - name: Build Release APK
-        run: flutter build apk --release
+        run: flutter build apk --release --no-tree-shake-icons
 
-      # 6. Сохраняем результат
+      # 7. Загрузка результата (Обновлено до v4.4)
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.4.0
         with:
           name: messenger-app-release
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 5
+          if-no-files-found: error
