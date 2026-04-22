@@ -3,40 +3,55 @@ name: Build Android APK
 on:
   push:
     branches: [ "main", "master" ]
-  workflow_dispatch: # Кнопка ручного запуска
+  workflow_dispatch: # Позволяет запустить вручную
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Скачиваем код (Используем последнюю стабильную версию и явный токен)
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0 # Скачиваем всю историю, чтобы не было проблем с версиями
 
+      # 2. Устанавливаем Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0' # Можешь поменять на свою версию
+          flutter-version: '3.24.0' # Убедись, что эта версия есть в списке доступных или используй 'stable'
           channel: 'stable'
 
+      # 3. Получаем зависимости
       - name: Install dependencies
         run: flutter pub get
 
+      # 4. Создаем ключ подписи (Keystore)
       - name: Create Keystore for Signing
         run: |
           mkdir -p android/app
-          keytool -genkey -v -keystore android/app/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass android -keypass android -dname "CN=Test, OU=Test, O=Test, L=Test, S=Test, C=US"
+          keytool -genkey -v -keystore android/app/upload-keystore.jks \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -alias upload \
+            -storepass android -keypass android \
+            -dname "CN=Test, OU=Test, O=Test, L=Test, S=Test, C=US"
           
+          # Записываем настройки в gradle.properties
           echo "storeFile=upload-keystore.jks" >> android/gradle.properties
           echo "storePassword=android" >> android/gradle.properties
           echo "keyAlias=upload" >> android/gradle.properties
           echo "keyPassword=android" >> android/gradle.properties
 
+      # 5. Сборка Release APK
       - name: Build Release APK
         run: flutter build apk --release
 
+      # 6. Сохраняем результат
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: messenger-app-release
           path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 5
