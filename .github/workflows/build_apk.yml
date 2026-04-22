@@ -7,19 +7,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Использует последний образ Ubuntu (24.04)
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. Скачиваем код (Обновлено до v5)
+      # 1. СКАЧИВАНИЕ КОДА (ИСПРАВЛЕННАЯ ВЕРСИЯ)
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5  # Обновлено до v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
           fetch-depth: 0
-          clean: true  # <-- ЭТО ВАЖНО: Очищает папку перед скачиванием
+          clean: true # Принудительная очистка перед скачиванием
 
-      # 2. Устанавливаем Flutter (Используем конкретную стабильную версию)
+      # 2. УСТАНОВКА FLUTTER
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -27,18 +27,18 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # 3. Получаем зависимости
+      # 3. ЗАВИСИМОСТИ
       - name: Install dependencies
         run: flutter pub get
 
-      # 4. Настройка Java и Gradle (Явно указываем версию Java, чтобы избежать конфликтов)
+      # 4. НАСТРОЙКА JAVA (ЯВНО УКАЗЫВАЕМ ВЕРСИЮ)
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 5. Создаем ключ подписи
+      # 5. СОЗДАНИЕ КЛЮЧА ПОДПИСИ
       - name: Create Keystore
         run: |
           mkdir -p android/app
@@ -53,13 +53,13 @@ jobs:
           echo "keyAlias=upload" >> android/gradle.properties
           echo "keyPassword=android" >> android/gradle.properties
 
-      # 6. Сборка APK
+      # 6. СБОРКА APK
       - name: Build Release APK
         run: flutter build apk --release --no-tree-shake-icons
 
-      # 7. Загрузка результата (Обновлено до v4.4)
+      # 7. ЗАГРУЗКА РЕЗУЛЬТАТА
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.4.0
+        uses: actions/upload-artifact@v4.4.0 # Обновлено до последней версии
         with:
           name: messenger-app-release
           path: build/app/outputs/flutter-apk/app-release.apk
