@@ -11,7 +11,6 @@ class ChatService {
 
   ChatService(this._apiService);
 
-  // 👇 Удаление чата
   Future<bool> deleteChat(int chatId, int userId) async {
     try {
       final response = await http.delete(
@@ -25,7 +24,6 @@ class ChatService {
     }
   }
 
-  // 👇 Удаление сообщения
   Future<bool> deleteMessage(int messageId, int userId) async {
     try {
       final response = await http.delete(
@@ -39,7 +37,6 @@ class ChatService {
     }
   }
 
-  // 👇 Отправить текстовое сообщение
   Future<Message?> sendMessage(int chatId, int senderId, String text) async {
     final data = {
       'chatId': chatId,
@@ -62,7 +59,6 @@ class ChatService {
     return null;
   }
 
-  // 👇 Отправить сообщение с картинкой
   Future<Message?> sendImageMessage(int chatId, int senderId, String imageUrl) async {
     final data = {
       'chatId': chatId,
@@ -85,7 +81,6 @@ class ChatService {
     return null;
   }
 
-  // 👇 Получить сообщения чата
   Future<List<Message>> getMessages(int chatId) async {
     final response = await _apiService.get('messages/$chatId');
 
@@ -109,17 +104,14 @@ class ChatService {
     return [];
   }
 
-  // 👇 НОВЫЙ МЕТОД: Получить кастомное имя собеседника
   Future<String?> getCustomName(int userId, int chatId) async {
     try {
-      // Формируем полный URL с параметрами
       final uri = Uri.parse('${_apiService.baseUrl}/settings/rename')
           .replace(queryParameters: {
         'userId': userId.toString(),
         'chatId': chatId.toString(),
       });
 
-      // Делаем GET запрос напрямую через http пакет
       final rawResponse = await http.get(
         uri,
         headers: {'Content-Type': 'application/json'},
@@ -136,7 +128,6 @@ class ChatService {
     }
   }
 
-  // 👇 Сохранить кастомное имя собеседника
   Future<bool> renameContact(int userId, int chatId, int targetUserId, String customName) async {
     final data = {
       'userId': userId,

@@ -138,7 +138,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       ),
       body: Column(
         children: [
-          // 1. ПОЛЕ НАЗВАНИЯ ГРУППЫ
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: _buildGlassTextField(
@@ -149,7 +148,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             ),
           ),
 
-          // 2. ПОЛЕ ПОИСКА УЧАСТНИКОВ
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: _buildGlassTextField(
@@ -163,7 +161,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
           const SizedBox(height: 16),
 
-          // 3. СПИСОК ВЫБРАННЫХ (КАПСУЛЫ)
           if (_selectedUsers.isNotEmpty)
             Container(
               constraints: const BoxConstraints(maxHeight: 100),
@@ -227,7 +224,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               ),
             ),
 
-          // 4. РЕЗУЛЬТАТЫ ПОИСКА
           Expanded(
             child: _searchResults.isEmpty
                 ? Center(
@@ -312,7 +308,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   ),
           ),
 
-          // 5. КНОПКА СОЗДАНИЯ
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -357,7 +352,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-  // Хелпер для стеклянных полей ввода
   Widget _buildGlassTextField({
     required TextEditingController controller,
     required String hint,

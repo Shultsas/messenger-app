@@ -10,7 +10,6 @@ class ChatListService {
 
   ChatListService(this._apiService);
 
-  // Получить чаты пользователя
   Future<List<Chat>> getUserChats(int userId) async {
     try {
       final response = await _apiService.get('chats?userId=$userId');
@@ -36,7 +35,6 @@ class ChatListService {
     return [];
   }
 
-  // 👇 НОВОЕ: Удаление чата
   Future<bool> deleteChat(int chatId, int userId) async {
     try {
       final response = await http.delete(

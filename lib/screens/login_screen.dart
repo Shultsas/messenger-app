@@ -2,11 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:ui'; // Для эффекта размытия (BackdropFilter)
+import 'dart:ui'; 
 import '../models/user.dart';  
 import '../services/auth_service.dart';
 import 'chat_list_screen.dart';
-// Если register_screen отдельный, раскомментируй импорт ниже, если нет - удали
 // import 'register_screen.dart'; 
 
 class LoginScreen extends StatefulWidget {
@@ -105,21 +104,18 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return Scaffold(
       body: Stack(
         children: [
-          // 1. ТВОЯ КАРТИНКА НА ФОНЕ
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/login_background.png'), // Твоя картинка
+                image: AssetImage('assets/images/login_background.jpg'), 
                 fit: BoxFit.cover,
               ),
             ),
-            // Синее затемнение, чтобы текст читался
             child: Container(
               color: Colors.blue.shade900.withOpacity(0.5),
             ),
           ),
           
-          // 2. ОСНОВНОЙ КОНТЕНТ С АНИМАЦИЕЙ
           FadeTransition(
             opacity: _fadeAnimation,
             child: SlideTransition(
@@ -130,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // 3. СТЕКЛЯННАЯ ПЛАШКА (Вместо пиксельной сетки)
                       ClipRRect(
                         borderRadius: BorderRadius.circular(24),
                         child: BackdropFilter(
@@ -153,14 +148,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                // Логотип (Текстовый, минимализм)
                                 const Text(
                                   'PIXAR',
                                   style: TextStyle(
                                     fontSize: 32,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
-                                    fontFamily: 'CascadiaCode', // НОВЫЙ ШРИФТ
+                                    fontFamily: 'CascadiaCode', 
                                     letterSpacing: 4,
                                     shadows: [
                                       Shadow(
@@ -184,7 +178,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 
                                 const SizedBox(height: 40),
                                 
-                                // Поля ввода
                                 _buildModernTextField(
                                   controller: _usernameController,
                                   hint: 'username',
@@ -223,7 +216,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 
                                 const SizedBox(height: 30),
                                 
-                                // Кнопка
                                 _isLoading
                                     ? const CircularProgressIndicator(color: Colors.white)
                                     : SizedBox(
@@ -253,7 +245,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 
                                 const SizedBox(height: 20),
                                 
-                                // Переключатель
                                 TextButton(
                                   onPressed: () {
                                     setState(() {
@@ -289,7 +280,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
   }
 
-  // Современное поле ввода (Стекло + Cascadia)
   Widget _buildModernTextField({
     required TextEditingController controller,
     required String hint,
@@ -309,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         style: const TextStyle(
           color: Colors.white,
           fontSize: 14,
-          fontFamily: 'CascadiaCode', // НОВЫЙ ШРИФТ
+          fontFamily: 'CascadiaCode',
         ),
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: Colors.blueAccent, size: 20),

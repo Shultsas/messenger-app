@@ -104,7 +104,6 @@ class _GroupMembersScreenState extends State<GroupMembersScreen> {
           ),
           const SizedBox(width: 12),
           
-          // Имя и статус
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +169,6 @@ class _GroupMembersScreenState extends State<GroupMembersScreen> {
             ),
           ),
           
-          // Иконка чата
           const Icon(Icons.chat, color: Colors.grey, size: 16),
         ],
       ),

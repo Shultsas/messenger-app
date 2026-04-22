@@ -17,7 +17,6 @@ class PixarApp extends StatefulWidget {
 class _PixarAppState extends State<PixarApp> {
   final AuthService _authService = AuthService();
   
-  // Экран по умолчанию (загрузка)
   Widget _initialScreen = const Scaffold(
     body: Center(child: CircularProgressIndicator(color: Colors.blueAccent)),
   );
@@ -28,7 +27,6 @@ class _PixarAppState extends State<PixarApp> {
     _checkAuth();
   }
 
-  // Проверка: залогинен пользователь или нет
   Future<void> _checkAuth() async {
     final user = await _authService.checkAuth();
     if (!mounted) return;
@@ -46,15 +44,11 @@ class _PixarAppState extends State<PixarApp> {
       title: 'Pixar Messenger',
       debugShowCheckedModeBanner: false,
       
-      // 🎨 НАСТРОЙКИ ТЕМЫ (ДОБАВЛЕНО)
       theme: ThemeData(
-        // 1. Базовый темный фон
         scaffoldBackgroundColor: const Color(0xFF0f172a),
         
-        // 2. Шрифт Cascadia Code везде
         fontFamily: 'CascadiaCode',
         
-        // 3. Цветовая схема
         colorScheme: ColorScheme.dark(
           primary: Colors.blueAccent,
           secondary: Colors.lightBlueAccent,
@@ -63,7 +57,6 @@ class _PixarAppState extends State<PixarApp> {
           error: Colors.redAccent,
         ),
 
-        // 4. Стиль верхней панели (AppBar)
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF1e293b),
           elevation: 0,
@@ -78,7 +71,6 @@ class _PixarAppState extends State<PixarApp> {
           iconTheme: IconThemeData(color: Colors.blueAccent),
         ),
 
-        // 5. Стиль кнопок
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blueAccent,
@@ -96,7 +88,6 @@ class _PixarAppState extends State<PixarApp> {
           ),
         ),
 
-        // 6. Стиль полей ввода
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.white.withOpacity(0.05),
@@ -123,7 +114,6 @@ class _PixarAppState extends State<PixarApp> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
 
-        // 7. Стиль текста
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.white, fontFamily: 'CascadiaCode'),
           bodyMedium: TextStyle(color: Colors.white70, fontFamily: 'CascadiaCode'),
@@ -131,7 +121,6 @@ class _PixarAppState extends State<PixarApp> {
           labelLarge: TextStyle(color: Colors.white, fontFamily: 'CascadiaCode'),
         ),
         
-        // 8. Стиль карточек
         cardTheme: CardThemeData(
           color: const Color(0xFF1e293b).withOpacity(0.6),
           elevation: 0,
@@ -142,7 +131,6 @@ class _PixarAppState extends State<PixarApp> {
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         ),
       ),
-      // КОНЕЦ НАСТРОЕК ТЕМЫ
 
       home: _initialScreen,
     );

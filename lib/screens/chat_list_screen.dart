@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:ui'; // Для эффекта размытия
+import 'dart:ui'; 
 import 'package:flutter/material.dart';
 import '../models/chat.dart';
 import '../services/chat_list_service.dart';
@@ -24,7 +24,8 @@ class ChatListScreen extends StatefulWidget {
 
 class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProviderStateMixin {
   final ChatListService _chatService = ChatListService(ApiService());
-  final SignalRService _signalR = SignalRService(); // 👈 2. СОЗДАЛИ ЭКЗЕМПЛЯР
+  final SignalRService _signalR = SignalRService(); 
+
   
   List<Chat> _chats = [];
   bool _isLoading = true;
@@ -52,23 +53,21 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
     _animController.forward();
   }
 
-  // 👇 4. НОВЫЙ МЕТОД: ПОДКЛЮЧЕНИЕ К SIGNALR
-    // 👇 ИСПРАВЛЕННЫЙ МЕТОД (убрали .connection?)
+ 
+  
   Future<void> _initSignalR() async {
     try {
       await _signalR.connect();
-      // Подключаемся к хабу. ID чата не важен для общего обновления, главное коннект.
+
       await _signalR.joinChat(-1); 
 
-      // ✅ ПРАВИЛЬНО: Используем метод on() напрямую
       _signalR.on("RefreshChatList", (args) {
         print("🔄 Получен сигнал: Обновляем список чатов!");
         if (mounted) {
-          _loadChats(); // Просто перезагружаем список
+          _loadChats(); 
         }
       });
 
-      // ✅ ПРАВИЛЬНО: Используем метод on() напрямую
       _signalR.on("UserStatusChanged", (args) {
          if (mounted) _loadChats(); 
       });
@@ -80,7 +79,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
 
   @override
   void dispose() {
-    _signalR.disconnect(); // 👈 5. ОТКЛЮЧАЕМСЯ ПРИ ВЫХОДЕ
+    _signalR.disconnect(); 
     _animController.dispose();
     super.dispose();
   }
@@ -124,14 +123,14 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
     }
   }
 
-  // Хелпер для иконок (оставляем, но можно заменить на Icons, если картинки нет)
+ 
   Widget _pixelIcon(String iconName, {double size = 24}) {
     return Image.asset(
       'assets/images/icons/$iconName',
       width: size,
       height: size,
       errorBuilder: (context, error, stackTrace) {
-        // Если картинки нет, показываем стандартную иконку
+       
         return Icon(Icons.help_outline, color: Colors.blueAccent, size: size);
       },
     );
@@ -140,16 +139,13 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Фон берется из темы (main.dart), но можно задать явно
       backgroundColor: const Color(0xFF0f172a), 
       appBar: AppBar(
-        // Цвет берется из темы, но можно переопределить
-        backgroundColor: Colors.transparent, // Прозрачный для эффекта стекла
+        backgroundColor: Colors.transparent, 
         elevation: 0,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Логотип (можно оставить картинку или заменить на текст/иконку)
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -248,7 +244,6 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-           // Можно открыть быстрый поиск или создание чата
            Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -280,8 +275,6 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
         return await _showDeleteConfirm(chat);
       },
       onDismissed: (direction) {
-        // Удаляем из списка визуально сразу, логика в confirmDismiss или здесь
-        // В твоем коде логика была в confirmDismiss, оставим так
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -290,7 +283,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05), // Полупрозрачный фон
+              color: Colors.white.withOpacity(0.05), 
               border: Border.all(color: Colors.white.withOpacity(0.1)),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -298,12 +291,11 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               leading: CircleAvatar(
                 radius: 24,
-                // Генерируем цвет на основе имени чата
                 backgroundColor: AvatarColorGenerator.getColor(chat.name),
                 child: Text(
                   chat.name.isNotEmpty ? chat.name[0].toUpperCase() : '?',
                   style: const TextStyle(
-                    color: Colors.white, // Белый текст на цветном фоне
+                    color: Colors.white, 
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     fontFamily: 'CascadiaCode',

@@ -7,7 +7,6 @@ import '../config/app_config.dart';
 class GroupService {
   final String baseUrl = AppConfig.baseUrl;
 
-  // Создание группы
   Future<Map<String, dynamic>?> createGroup(
     String groupName,
     int creatorId,
@@ -36,7 +35,6 @@ class GroupService {
     }
   }
 
-  // 👇 НОВОЕ: Получить участников группы
   Future<List<Map<String, dynamic>>> getGroupMembers(int chatId) async {
     try {
       final response = await http.get(
@@ -57,7 +55,6 @@ class GroupService {
     }
   }
 
-  // Поиск пользователей
   Future<List<Map<String, dynamic>>> searchUsers(String query, int currentUserId) async {
     if (query.isEmpty) return [];
 

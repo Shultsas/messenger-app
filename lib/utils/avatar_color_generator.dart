@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 
 class AvatarColorGenerator {
-  // Палитра приятных цветов (Material Design)
   static final List<Color> _palette = [
     Colors.redAccent,
     Colors.pinkAccent,
@@ -23,21 +22,17 @@ class AvatarColorGenerator {
     Colors.deepOrangeAccent,
   ];
 
-  /// Возвращает стабильный цвет для конкретного имени
   static Color getColor(String name) {
     if (name.isEmpty) return Colors.grey;
 
-    // Суммируем коды всех символов имени
     int sum = 0;
     for (int i = 0; i < name.length; i++) {
       sum += name.codeUnitAt(i);
     }
 
-    // Выбираем цвет по индексу (остаток от деления на длину палитры)
     return _palette[sum % _palette.length];
   }
 
-  /// Возвращает градиент для фона (опционально, для красоты)
   static LinearGradient getGradient(String name) {
     final color = getColor(name);
     return LinearGradient(

@@ -1,11 +1,11 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'dart:async';
-import 'dart:convert'; // Для jsonDecode
-import 'dart:io';      // Для File и Process (PowerShell)
+import 'dart:convert'; 
+import 'dart:io';      
 import 'dart:ui'; 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Для работы с клавиатурой (KeyDownEvent и т.д.)
+import 'package:flutter/services.dart'; 
 import 'package:image_picker/image_picker.dart'; 
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart'; 
@@ -47,8 +47,8 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
   bool _isConnected = false;
   bool _isUploadingImage = false;
 
-  int? _targetUserId; // ID собеседника кому меняем имя
-  String? _customName; // текущее кастом имя
+  int? _targetUserId;
+  String? _customName; 
   
   String? _typingUser;
   Timer? _typingTimer;
@@ -152,7 +152,6 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
     
     if (!mounted) return;
     
-    // 1. Определяем собеседника
     if (_targetUserId == null && messages.isNotEmpty) {
       final otherMsg = messages.firstWhere(
         (m) => m.senderId != widget.currentUserId,
@@ -163,11 +162,9 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
           _targetUserId = otherMsg.senderId;
         });
         
-        // 2. 👇 ЕСЛИ НАШЛИ СОБЕСЕДНИКА — СРАЗУ ГРУЗИМ ИМЯ
         _loadCustomName();
       }
     } else if (_targetUserId != null) {
-       // Если собеседник уже определен (например, был ранее), но имя еще не грузили
        if (_customName == null) {
          _loadCustomName();
        }
@@ -179,7 +176,6 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
     });
   }
 
-  // 👇 НОВЫЙ МЕТОД: Загрузка имени с сервера
   Future<void> _loadCustomName() async {
     if (_targetUserId == null) return;
 
@@ -219,7 +215,6 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
     }
   }
 
-  // Отправка фото из галереи/камеры
   Future<void> _pickAndSendImage() async {
     print('📸 НАЧАЛО ЗАГРУЗКИ ФОТО');
     final ImageSource? source = await showDialog<ImageSource>(
@@ -296,13 +291,11 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
     }
   }
 
-  // 👇 НОВЫЙ МЕТОД: Обработка Ctrl+V через PowerShell (Windows)
   Future<void> _handleClipboardImage() async {
     try {
       final tempDir = await getTemporaryDirectory();
       final filePath = '${tempDir.path}\\clipboard_${DateTime.now().millisecondsSinceEpoch}.png';
 
-      // Команда PowerShell для сохранения картинки из буфера в файл
       final command = '''
         Add-Type -AssemblyName System.Windows.Forms
         Add-Type -AssemblyName System.Drawing
@@ -329,7 +322,6 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
     }
   }
 
-  // 👇 НОВЫЙ МЕТОД: Отправка файла из пути
   Future<void> _sendImageFromFile(String filePath) async {
     if (!await File(filePath).exists()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -376,31 +368,26 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
     }
   }
 
-    // Возвращает кастомное имя, если есть, иначе стандартное из виджета
   String _getDisplayName() {
     return _customName ?? widget.chatName;
   }
 
   // Диалог переименования
    void _showRenameDialog() {
-    // 1. Пытаемся найти собеседника ПРЯМО СЕЙЧАС в текущем списке сообщений
     int? targetId = _targetUserId;
 
     if (targetId == null && _messages.isNotEmpty) {
-      // Ищем первое сообщение не от меня
       final otherMsg = _messages.firstWhere(
         (m) => m.senderId != widget.currentUserId,
         orElse: () => _messages.first,
       );
       if (otherMsg.senderId != widget.currentUserId) {
         targetId = otherMsg.senderId;
-        // Сохраняем найденный ID в переменную для будущего
         setState(() => _targetUserId = targetId); 
         print('🎯 Собеседник найден в сообщениях: $targetId');
       }
     }
 
-    // 2. Если все еще null — значит чат пуст
     if (targetId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -412,7 +399,6 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
       return;
     }
 
-    // 3. Если ID есть — открываем диалог
     final controller = TextEditingController(text: _getDisplayName());
     
     showDialog(
@@ -450,7 +436,7 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
               final success = await _chatService.renameContact(
                 widget.currentUserId,
                 widget.chatId,
-                targetId!, // Теперь точно не null
+                targetId!, 
                 newName,
               );
 
@@ -525,18 +511,18 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
               mainAxisSize: MainAxisSize.min,
               children: [
                   GestureDetector(
-                  onTap: _showRenameDialog, // <-- Вызываем наш диалог
+                  onTap: _showRenameDialog, 
                   child: Tooltip(
                     message: 'Нажмите, чтобы переименовать',
                     child: Text(
-                      _getDisplayName(), // <-- Используем кастомное имя
+                      _getDisplayName(), 
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontFamily: 'CascadiaCode',
                         letterSpacing: 0.5,
-                        decoration: TextDecoration.underline, // Подчеркивание, что можно нажать
+                        decoration: TextDecoration.underline,
                         decorationColor: Colors.blueAccent,
                       ),
                     ),
@@ -672,7 +658,7 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
             child: KeyboardListener(
               focusNode: FocusNode(),
               onKeyEvent: (KeyEvent event) async {
-                // Обработка Ctrl+V
+               
                 if (event is KeyDownEvent &&
                     event.logicalKey == LogicalKeyboardKey.keyV &&
                     HardwareKeyboard.instance.isControlPressed) {

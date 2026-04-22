@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
-import 'dart:ui'; // Для эффекта размытия
+import 'dart:ui'; 
 import 'package:flutter/material.dart';
 import '../services/search_service.dart';
 import 'chat_screen.dart';
@@ -58,7 +58,7 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
 
     setState(() => _isSearching = true);
     
-    // Небольшая задержка для плавности UI
+  
     await Future.delayed(const Duration(milliseconds: 300));
     
     final results = await _searchService.searchUsers(query, widget.currentUserId);
@@ -68,14 +68,13 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
     setState(() {
       _results = results;
       _isSearching = false;
-      _animController.forward(from: 0); // Запуск анимации при новых результатах
+      _animController.forward(from: 0); 
     });
   }
 
   Future<void> _startChat(Map<String, dynamic> user) async {
     print('🔍 Starting chat with user: ${user['username']} (ID: ${user['id']})');
     
-    // Блокируем кнопку во время создания
     setState(() => _isSearching = true);
 
     final chatData = await _searchService.createDirectChat(
@@ -135,7 +134,6 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
       ),
       body: Column(
         children: [
-          // 🔍 ПОЛЕ ПОИСКА (Стекло + Градиент)
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ClipRRect(
@@ -242,7 +240,6 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
     );
   }
 
-  // Карточка пользователя (Стекло + Аватарка)
   Widget _buildUserTile(Map<String, dynamic> user) {
     final username = user['username'] ?? 'Unknown';
     final firstLetter = username.isNotEmpty ? username[0].toUpperCase() : '?';
@@ -263,7 +260,6 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
             ),
             child: Row(
               children: [
-                // Аватарка (Буква)
                 CircleAvatar(
                   radius: 24,
                   backgroundColor: Colors.blueAccent.withOpacity(0.2),
@@ -278,7 +274,6 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                   ),
                 ),
                 const SizedBox(width: 16),
-                // Имя
                 Expanded(
                   child: Text(
                     username,
@@ -292,7 +287,6 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                // Иконка действия
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(

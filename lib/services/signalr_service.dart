@@ -10,7 +10,6 @@ class SignalRService {
   SignalRService() : _hubUrl = AppConfig.baseUrl.replaceFirst('/api', '/chathub');
   
 
-  // Подключение к хабу
   Future<void> connect() async {
     if (_connection != null) return;
 
@@ -23,20 +22,17 @@ class SignalRService {
     print('SignalR connected!');
   }
 
-  // Присоединиться к чату
   Future<void> joinChat(int chatId) async {
     if (_connection == null) await connect();
     await _connection!.invoke('JoinChat', args: [chatId]);
     print('Joined chat: $chatId');
   }
 
-  // Отправить сообщение через SignalR
   Future<void> sendMessage(int chatId, int senderId, String text) async {
     if (_connection == null) await connect();
     await _connection!.invoke('SendMessage', args: [chatId, senderId, text]);
   }
 
-  // Слушать входящие сообщения
   void onMessageReceived(Function(Map<String, dynamic>) callback) {
     _connection?.on('ReceiveMessage', (args) {
       if (args != null && args.isNotEmpty) {
@@ -45,7 +41,6 @@ class SignalRService {
     });
   }
 
-  // 👇 ИСПРАВЛЕННЫЙ МЕТОД
 void on(String eventName, void Function(List<dynamic>? args) handler) {
   if (_connection != null) {
     _connection!.on(eventName, handler);
@@ -55,7 +50,6 @@ void on(String eventName, void Function(List<dynamic>? args) handler) {
 }
 
 
-  // Отключение
   Future<void> disconnect() async {
     if (_connection != null) {
       await _connection!.stop();
@@ -64,13 +58,11 @@ void on(String eventName, void Function(List<dynamic>? args) handler) {
     }
   }
 
-  // Отправить статус "печатает"
   Future<void> sendTypingStatus(int chatId, int userId, String username) async {
     if (_connection == null) await connect();
     await _connection!.invoke('UserTyping', args: [chatId, userId, username]);
   }
 
-  // Слушать статус "печатает" от других
   void onUserTyping(Function(Map<String, dynamic>) callback) {
     _connection?.on('UserTyping', (args) {
       if (args != null && args.isNotEmpty) {
