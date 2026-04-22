@@ -1,0 +1,9 @@
+releases:
+  - name: prod
+    jobs:
+      - name: windows-exe
+        package:
+          platform: windows
+          target: exe
+          build_args:
+            output: D:\OLD_WINDOWS\source\repos\messenger_app\build\windows\runner\Release

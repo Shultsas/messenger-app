@@ -1,0 +1,51 @@
+name: messenger_app
+description: "Pixar Messenger - A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+intl: ^0.19.0
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  http: ^1.6.0
+  shared_preferences: ^2.5.4
+  signalr_netcore: ^1.4.4
+  audioplayers: ^6.6.0
+  flutter_distributor: ^0.2.8
+  image_picker: ^1.2.1
+  path_provider: ^2.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Объединенный список ассетов
+  assets:
+    # Звуки
+    - assets/sounds/message.mp3
+    
+    # Картинки (конкретные файлы)
+    - assets/images/logo.png
+    - assets/images/login_background.png  # <-- ТВОЯ НОВАЯ КАРТИНКА (добавил явно)
+    - assets/images/backgrounds/chat_background.png
+    - assets/images/avatars/default_avatar.png
+    
+    # Папки (подгрузит всё остальное внутри)
+    - assets/images/icons/
+    - assets/images/ 
+    - assets/fonts/
+
+  # Шрифты
+  fonts:
+    - family: CascadiaCode
+      fonts:
+        # Убедись, что файл называется именно так! Если у тебя CascadiaCode.ttf, поправь тут.
+        - asset: assets/fonts/CascadiaCode-Bold.ttf
